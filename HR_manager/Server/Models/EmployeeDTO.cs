@@ -19,7 +19,7 @@ namespace HR_manager.Server.Models
         [Required]
         public int DepartmentId { get; set; }
     }
-    public class EmployeeDTO
+    public class EmployeeDTO: CreateEmployeeDTO
     {
         public int Id { get; set; }
         public DepartmentDTO Department { get; set; }
