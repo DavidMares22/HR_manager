@@ -4,4 +4,16 @@
 
 Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<AuthorizeView>
+
+    <Authorized>
+        <SurveyPrompt Title="How is Blazor working for you?" />
+    </Authorized>
+    <NotAuthorized>
+        <p>Annonymus user</p>
+    </NotAuthorized>
+
+
+</AuthorizeView>
+
+

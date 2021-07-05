@@ -18,31 +18,35 @@
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            <NavLink class="nav-link" href="employees/">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> List of Employees
             </NavLink>
         </li>
         <li class="nav-item px-3">
+        </li>
+        <AuthorizeView>
+            <Authorized>
             <NavLink class="nav-link" href="authentication/profile" Match="NavLinkMatch.All">
                 @*<span class="oi oi-person" aria-hidden="true"></span> Hello, @context.User.Identity.Name!*@
                 <span class="oi oi-person" aria-hidden="true"></span> Hello, user!
             </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="authentication/logout" Match="NavLinkMatch.All">
-                <span class="oi oi-account-logout" aria-hidden="true"></span> Log out
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="authentication/register" Match="NavLinkMatch.All">
-                <span class="oi oi-person" aria-hidden="true"></span> Register
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="authentication/login" Match="NavLinkMatch.All">
-                <span class="oi oi-account-login" aria-hidden="true"></span> Log In
-            </NavLink>
-        </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="authentication/logout" Match="NavLinkMatch.All">
+                        <span class="oi oi-account-logout" aria-hidden="true"></span> Log out
+                    </NavLink>
+                </li>
+                <li class="nav-item px-3">
+                    <NavLink class="nav-link" href="authentication/register" Match="NavLinkMatch.All">
+                        <span class="oi oi-person" aria-hidden="true"></span> Register
+                    </NavLink>
+                </li>
+            </Authorized>
+        </AuthorizeView>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="authentication/login" Match="NavLinkMatch.All">
+                    <span class="oi oi-account-login" aria-hidden="true"></span> Log In
+                </NavLink>
+            </li>
     </ul>
 </div>
 
