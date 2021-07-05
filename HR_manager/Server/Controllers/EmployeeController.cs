@@ -2,6 +2,7 @@
 using HR_manager.Server.Data;
 using HR_manager.Server.IRepository;
 using HR_manager.Server.Models;
+using HR_manager.Shared.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

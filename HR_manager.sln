@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR_manager.Server", "HR_manager\Server\HR_manager.Server.csproj", "{D78469EE-E547-4692-A9F3-C2EA9C613019}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR_manager.Server", "HR_manager\Server\HR_manager.Server.csproj", "{D78469EE-E547-4692-A9F3-C2EA9C613019}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR_manager.Client", "HR_manager\Client\HR_manager.Client.csproj", "{7C8F386B-0F22-4035-86A4-C6287D5B9816}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR_manager.Client", "HR_manager\Client\HR_manager.Client.csproj", "{7C8F386B-0F22-4035-86A4-C6287D5B9816}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HR_manager.Shared", "HR_manager\Shared\HR_manager.Shared.csproj", "{B11343EF-3534-401C-8805-837673FADA92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HR_manager.Shared", "HR_manager\Shared\HR_manager.Shared.csproj", "{B11343EF-3534-401C-8805-837673FADA92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

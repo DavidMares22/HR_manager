@@ -1,0 +1,62 @@
+﻿@page "/employees/"
+@inject HttpClient _client
+@inject IJSRuntime js
+
+
+@if (Employees == null)
+{
+    <div class="alert alert-info">Loading Employees...</div>
+}
+else
+{
+    <table class="table ">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var employee in Employees)
+            {
+                <tr>
+                    <td>@employee.Name</td>
+                    <td>
+                        <a href="" class="btn btn-primary">
+                            <span class="oi oi-book"></span>
+                        </a>
+                        <button class="btn btn-danger" @onclick="@(()=>Delete(employee.Id))">
+                            <span class="oi oi-delete"></span>
+                        </button>
+
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Employee> Employees;
+
+    protected async override Task OnInitializedAsync()
+    {
+        Employees = await _client.GetFromJsonAsync<List<Employee>>($"{Endpoints.EmployeesEndpoint}");
+    }
+
+    async Task Delete(int employeeId)
+    {
+        var employee = Employees.First(q => q.Id == employeeId);
+        var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {employee.Name}?");
+        if (confirm)
+        {
+            await _client.DeleteAsync($"{Endpoints.EmployeesEndpoint}/{employeeId}");
+            await OnInitializedAsync();
+        }
+
+    }
+
+
+}

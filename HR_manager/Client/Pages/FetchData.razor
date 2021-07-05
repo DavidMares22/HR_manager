@@ -6,7 +6,7 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
-@if (forecasts == null || h == null )
+@if (forecasts == null  )
 {
     <p><em>Loading...</em></p>
 }
@@ -37,23 +37,17 @@ else
     </table>
 
 
-    @foreach (var e in h)
-    {
-
-        <p>@e.id</p>
-
-
-    }
+ 
 }
 
 @code {
     private WeatherForecast[] forecasts;
-    public Departments[] h;
+    
 
     protected override async Task OnInitializedAsync()
     {
         forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("WeatherForecast");
-        h = await Http.GetFromJsonAsync<Departments[]>("api/Department");
+        //h = await Http.GetFromJsonAsync<Departments[]>("api/Department");
 
 
 

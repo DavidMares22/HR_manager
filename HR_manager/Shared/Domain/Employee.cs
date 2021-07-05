@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace HR_manager.Server.Data
+namespace HR_manager.Shared.Domain
 {
     public class Employee
     {
@@ -17,5 +18,4 @@ namespace HR_manager.Server.Data
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
     }
-
 }

@@ -1,4 +1,4 @@
-﻿using HR_manager.Server.Data;
+﻿using HR_manager.Shared.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
