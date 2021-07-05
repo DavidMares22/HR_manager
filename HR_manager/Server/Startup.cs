@@ -2,6 +2,7 @@ using HR_manager.Server.Configurations;
 using HR_manager.Server.Data;
 using HR_manager.Server.IRepository;
 using HR_manager.Server.Repository;
+using HR_manager.Server.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -33,10 +34,18 @@ namespace HR_manager.Server
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
         
-        services.AddRazorPages();
+            services.AddRazorPages();
+        
             services.AddDbContext<DatabaseContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("sqlConnection"))
            );
+
+
+            services.AddAuthentication();
+            services.ConfigureIdentity();
+            services.ConfigureJWT(Configuration);
+
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -46,6 +55,7 @@ namespace HR_manager.Server
             services.AddAutoMapper(typeof(MapperInitilizer));
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IAuthManager, AuthManager>();
 
             services.AddSwaggerGen(c =>
             {
@@ -73,6 +83,8 @@ namespace HR_manager.Server
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HR Manager v1"));
 
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
@@ -81,14 +93,16 @@ namespace HR_manager.Server
             app.UseCors("CorsPolicy");
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });
-            app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HR Manager v1"));
+            
         }
     }
 }

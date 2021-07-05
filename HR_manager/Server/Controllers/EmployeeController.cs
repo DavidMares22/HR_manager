@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HR_manager.Server.IRepository;
 using HR_manager.Server.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -39,7 +40,8 @@ namespace HR_manager.Server.Controllers
                 return StatusCode(500, "Internal Server Error. Please Try Again Later.");
             }
         }
-
+        
+        [Authorize]
         [HttpGet("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

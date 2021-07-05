@@ -16,6 +16,7 @@ namespace HR_manager.Server.Configurations
             CreateMap<Department, CreateDepartmentDTO>().ReverseMap();
             CreateMap<Employee, EmployeeDTO>().ReverseMap();
             CreateMap<Employee, CreateEmployeeDTO>().ReverseMap();
+            CreateMap<ApiUser, UserDTO>().ReverseMap();
         }
     }
 }
