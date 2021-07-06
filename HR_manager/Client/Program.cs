@@ -1,4 +1,6 @@
 using HR_manager.Client.Auth;
+using HR_manager.Client.Helper;
+using HR_manager.Client.Repository;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -20,10 +22,17 @@ namespace HR_manager.Client
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
+            builder.Services.AddScoped<IHttpService, HttpService>();
+            builder.Services.AddScoped<IDisplayMessage, DisplayMessage>();
             builder.Services.AddAuthorizationCore();
-            builder.Services.AddScoped<AuthenticationStateProvider, DummyAuthenticationStateProvider>();
-
+            builder.Services.AddScoped<IAccountsRepository, AccountsRepository>();
+            builder.Services.AddScoped<JWTAuthenticationStateProvider>();
+            builder.Services.AddScoped<AuthenticationStateProvider, JWTAuthenticationStateProvider>(
+                provider => provider.GetRequiredService<JWTAuthenticationStateProvider>()
+                );
+            builder.Services.AddScoped<ILoginService, JWTAuthenticationStateProvider>(
+               provider => provider.GetRequiredService<JWTAuthenticationStateProvider>()
+               );
             await builder.Build().RunAsync();
         }
     }
