@@ -3,6 +3,28 @@
 @inject IJSRuntime js
 
 <HeadingComponent Text="List of Employees" />
+
+<br />
+
+<AuthorizeView Roles="Administrator">
+
+    <Authorized>
+        <a href="/employee/create" class="btn btn-secondary">
+            <span class="oi oi-plus"></span>
+            Create New Employee
+        </a>
+    </Authorized>
+    <NotAuthorized>
+        <p>Only Administrators can create Employees</p>
+    </NotAuthorized>
+
+
+</AuthorizeView>
+
+
+<br />
+<br />
+
 <br />
 @if (Employees == null)
 {
@@ -25,6 +47,9 @@ else
                     <td>
                         <a href="" class="btn btn-primary">
                             <span class="oi oi-book"></span>
+                        </a>
+                        <a href="/employee/edit/@employee.Id" class="btn btn-warning">
+                            <span class="oi oi-pencil"></span>
                         </a>
                         <button class="btn btn-danger" @onclick="@(()=>Delete(employee.Id))">
                             <span class="oi oi-delete"></span>

@@ -1,0 +1,29 @@
+﻿@page "/employee/edit/{id:int}"
+@inject IEmployeeRepository employeeRepository
+@inject NavigationManager navigationManager
+
+<h3>Edit Employee</h3>
+
+@if (employee != null)
+{
+
+    <EmployeeForm employee="employee" OnValidSubmit="Edit" />
+}
+
+
+@code {
+
+    [Parameter] public int id { get; set; }
+    private Employee employee;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        employee = await employeeRepository.GetEmployee(id);
+    }
+    private void Edit()
+    {
+        employeeRepository.UpdateEmployee(employee,id);
+        navigationManager.NavigateTo("/employees/");
+    }
+}

@@ -1,0 +1,36 @@
+﻿
+
+
+<EditForm Model="employee" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-group">
+        <label>Name: </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@employee.Name" />
+            <ValidationMessage For="@(()=> employee.Name)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Middle Name: </label>
+        <div>
+            <InputText class="form-control" @bind-Value="@employee.MiddleName" />
+            <ValidationMessage For="@(()=> employee.MiddleName)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Department id: </label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@employee.DepartmentId" />
+            <ValidationMessage For="@(()=> employee.DepartmentId)" />
+        </div>
+    </div>
+    <button class="btn btn-success" type="submit">Save Changes</button>
+
+</EditForm>
+@code {
+
+    [Parameter] public Employee employee { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+
+}

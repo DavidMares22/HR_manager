@@ -24,6 +24,7 @@ namespace HR_manager.Client
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped<IHttpService, HttpService>();
             builder.Services.AddScoped<IDisplayMessage, DisplayMessage>();
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<IAccountsRepository, AccountsRepository>();
             builder.Services.AddScoped<JWTAuthenticationStateProvider>();
