@@ -28,7 +28,15 @@
         </div>
     </div>
 
-     
+    <select id="myselect" class="form-control" @onchange="selectedValue">
+        
+
+        <option value="User">User</option>
+        <option value="Administrator">Administrator</option>
+
+    </select>
+    <p>@mylist[0]</p>
+
     <button type="submit" class="btn btn-primary">Register</button>
 
 </EditForm>
@@ -38,6 +46,20 @@
 
     private UserInfo userInfo = new UserInfo();
     private List<string> mylist = new List<string>(new string[] { "User" });
+
+    public string SelectedValue = "";
+    public void selectedValue(ChangeEventArgs args)
+    {
+        SelectedValue = args.Value.ToString();
+
+        mylist.RemoveAt(0);
+        mylist.Add(SelectedValue);
+
+        
+
+
+
+    }
 
     private async Task CreateUser()
     {
