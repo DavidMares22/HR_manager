@@ -9,7 +9,7 @@ namespace HR_manager.Client.Repository
     public interface IAccountsRepository
     {
         Task<UserToken> Login(UserInfo userInfo);
-        Task<string> Register(UserInfo userInfo);
+        Task<List<string>> Register(UserInfo userInfo);
         //Task<UserToken> RenewToken();
     }
 }

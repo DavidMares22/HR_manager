@@ -58,8 +58,10 @@ namespace HR_manager.Client.Helper
             var response = await httpClient.PostAsync(url, stringContent);
             if (response.IsSuccessStatusCode)
             {
-                var responseDeserialized = await Deserialize<TResponse>(response, defaultJsonSerializerOptions);
-                return new HttpResponseWrapper<TResponse>(responseDeserialized, true, response);
+                //Console.WriteLine($"upsi");
+                //var responseDeserialized = await Deserialize<TResponse>(response, defaultJsonSerializerOptions);
+                //Console.WriteLine($"what is this ${responseDeserialized}");
+                return new HttpResponseWrapper<TResponse>(default, true, response);
              }
             else
             {

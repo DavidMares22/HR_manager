@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HR_manager.Shared.DTOs;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -18,11 +20,33 @@ namespace HR_manager.Client.Helper
         public bool Success { get; set; }
         public T Response { get; set; }
         public HttpResponseMessage HttpResponseMessage { get; set; }
+        public object Content { get; internal set; }
 
-        public async Task<string> GetBody()
+        public async Task<ErrorResponse> GetBody()
         {
+            string response = await HttpResponseMessage.Content.ReadAsStringAsync();
 
-            return await HttpResponseMessage.Content.ReadAsStringAsync();
+
+
+            ErrorResponse x = JsonConvert.DeserializeObject<ErrorResponse>(response);
+            
+
+            //Console.WriteLine(x.errors.Email[0]);
+
+            return x;
+        }
+        public async Task<SuccessResponse> GetBodySuccess()
+        {
+            string response = await HttpResponseMessage.Content.ReadAsStringAsync();
+
+
+
+            SuccessResponse x = JsonConvert.DeserializeObject<SuccessResponse>(response);
+
+
+            //Console.WriteLine(x.errors.Email[0]);
+
+            return x;
         }
     }
 }

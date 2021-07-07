@@ -43,9 +43,19 @@
     {
         userInfo.Roles = mylist;
 
-        var userToken = await accountsRepository.Register(userInfo);
+        List<string> userToken = await accountsRepository.Register(userInfo);
 
-        await displayMessage.DisplayErrorMessage(userToken);
+        if (userToken.ElementAt(0) == "Error: ")
+        {
+            await displayMessage.DisplayErrorMessage(string.Join(" ", userToken));
+        }
+        else
+        {
+            await displayMessage.DisplaySuccessMessage(string.Join(" ", userToken));
+        }
+
+
+
 
         //Console.WriteLine("response from register: " + userToken);
         //await loginService.Login(userToken.Token);

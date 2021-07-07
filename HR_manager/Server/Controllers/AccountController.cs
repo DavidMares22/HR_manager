@@ -55,7 +55,9 @@ namespace HR_manager.Server.Controllers
                     return BadRequest(ModelState);
                 }
                 await _userManager.AddToRolesAsync(user, userDTO.Roles);
-                return Accepted();
+                return Ok(new { Success = $"User was successfully created {userDTO.Email}" });
+
+
             }
             catch (Exception ex)
             {

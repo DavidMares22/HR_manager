@@ -19,19 +19,31 @@ namespace HR_manager.Client.Repository
         }
 
 
-        public async Task<string> Register(UserInfo userInfo)
+        public async Task<List<string>> Register(UserInfo userInfo)
         {
+
+
             var httpResponse = await httpService.Post<UserInfo, string>($"{baseURL}/register", userInfo);
 
             if (!httpResponse.Success)
             {
-                //throw new ApplicationException(await httpResponse.GetBody());
 
-                return await httpResponse.GetBody();
+                List<string> error = new List<string>();
+                error.Add("Error: ");
+                ErrorResponse errorMessage = await httpResponse.GetBody();
+
+                error.Add(errorMessage.ToString());
+
+                return error;
 
             }
 
-            return httpResponse.Response;
+            Console.WriteLine("we are here");
+            SuccessResponse successMessage = await httpResponse.GetBodySuccess();
+            List<string> success = new List<string>();
+            success.Add("Success: ");
+            success.Add(successMessage.success);
+            return success;
         }
 
         public async Task<UserToken> Login(UserInfo userInfo)
