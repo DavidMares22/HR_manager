@@ -92,6 +92,7 @@ namespace HR_manager.Client.Auth
 
         public async Task Login(string token)
         {
+            
             await js.SetInLocalStorage(TOKENKEY, token);
             var authState = BuildAuthenticationState(token);
             NotifyAuthenticationStateChanged(Task.FromResult(authState));

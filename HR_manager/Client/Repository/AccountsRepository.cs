@@ -38,7 +38,6 @@ namespace HR_manager.Client.Repository
 
             }
 
-            Console.WriteLine("we are here");
             SuccessResponse successMessage = await httpResponse.GetBodySuccess();
             List<string> success = new List<string>();
             success.Add("Success: ");
@@ -46,16 +45,29 @@ namespace HR_manager.Client.Repository
             return success;
         }
 
-        public async Task<UserToken> Login(UserInfo userInfo)
+        public async Task<List<string>> Login(UserInfo userInfo)
         {
             var httpResponse = await httpService.Post<UserInfo, UserToken>($"{baseURL}/login", userInfo);
 
             if (!httpResponse.Success)
             {
-                //throw new ApplicationException(await httpResponse.GetBody());
+                List<string> error = new List<string>();
+                error.Add("Error: ");
+
+                ErrorResponse errorMessage = await httpResponse.GetBody();
+
+                error.Add(errorMessage.ToString());
+
+
+                return error;
             }
 
-            return httpResponse.Response;
+            UserToken token = await httpResponse.GetBodyLogin();
+            List<string> success = new List<string>();
+            success.Add("Success: ");
+            success.Add(token.token);
+
+            return success;
         }
 
     }

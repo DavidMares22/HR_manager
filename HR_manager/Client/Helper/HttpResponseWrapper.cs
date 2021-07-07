@@ -44,7 +44,18 @@ namespace HR_manager.Client.Helper
             SuccessResponse x = JsonConvert.DeserializeObject<SuccessResponse>(response);
 
 
-            //Console.WriteLine(x.errors.Email[0]);
+
+            return x;
+        }
+        public async Task<UserToken> GetBodyLogin()
+        {
+            string response = await HttpResponseMessage.Content.ReadAsStringAsync();
+
+
+
+            UserToken x = JsonConvert.DeserializeObject<UserToken>(response);
+
+
 
             return x;
         }
