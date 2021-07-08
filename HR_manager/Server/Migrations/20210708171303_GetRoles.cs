@@ -2,19 +2,19 @@
 
 namespace HR_manager.Server.Migrations
 {
-    public partial class AddedDefaultRoles : Migration
+    public partial class GetRoles : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ccf8c5b3-825c-4f0c-bf6c-cff836365163", "35daa659-d1db-45df-be1a-ed8b96bd7c55", "User", "USER" });
+                values: new object[] { "6d680400-0a81-412d-af43-212b3c2672f3", "6bbeaa8d-a06a-402d-b513-09d57accb636", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "0f878be5-9a49-435f-928b-ef3464bbc689", "ffe7fd5b-fabc-4566-95a3-60cdf230802a", "Administrator", "ADMINISTRATOR" });
+                values: new object[] { "902943d5-011f-4199-80c1-86a0ecfec0e7", "6bfc5c52-09e3-486e-aa65-b17b1dc12f21", "Administrator", "ADMINISTRATOR" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -22,12 +22,12 @@ namespace HR_manager.Server.Migrations
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "0f878be5-9a49-435f-928b-ef3464bbc689");
+                keyValue: "6d680400-0a81-412d-af43-212b3c2672f3");
 
             migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
-                keyValue: "ccf8c5b3-825c-4f0c-bf6c-cff836365163");
+                keyValue: "902943d5-011f-4199-80c1-86a0ecfec0e7");
         }
     }
 }

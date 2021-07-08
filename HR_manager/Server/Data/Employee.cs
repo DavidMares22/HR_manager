@@ -3,23 +3,25 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace HR_manager.Shared.Domain
+namespace HR_manager.Server.Data
 {
     public class Employee
     {
         public int Id { get; set; }
+
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+        public virtual ApiUser User { get; set; }
+
         [Required]
         public string Name { get; set; }
         [Required]
         public string MiddleName { get; set; }
-        public double LastName { get; set; }
-
-        [ForeignKey(nameof(Department))]
         [Required]
-        public int DepartmentId { get; set; }
-        public Department Department { get; set; }
+        public string LastName { get; set; }
+
+        
     }
 }

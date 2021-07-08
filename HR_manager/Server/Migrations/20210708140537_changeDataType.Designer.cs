@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HR_manager.Server.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20210704064952_AddedIdentity")]
-    partial class AddedIdentity
+    [Migration("20210708140537_changeDataType")]
+    partial class changeDataType
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -100,28 +100,12 @@ namespace HR_manager.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Sales"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "IT"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "HR"
-                        });
                 });
 
             modelBuilder.Entity("HR_manager.Server.Data.Employee", b =>
@@ -131,49 +115,131 @@ namespace HR_manager.Server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("LastName")
-                        .HasColumnType("float");
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MiddleName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.EmployeeData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("FK_EmployeeData_To_Department")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FK_EmployeeData_To_Employee")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FK_EmployeeData_To_EmployeeType")
+                        .HasColumnType("int");
+
+                    b.Property<double>("HourlyRate")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FK_EmployeeData_To_Department");
+
+                    b.HasIndex("FK_EmployeeData_To_Employee");
+
+                    b.HasIndex("FK_EmployeeData_To_EmployeeType");
+
+                    b.ToTable("EmployeeData");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.EmployeeTime", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("FK_EmployeeTime_to_Employee")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FK_EmployeeTime_to_LoggedTime")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FK_EmployeeTime_to_Employee");
+
+                    b.HasIndex("FK_EmployeeTime_to_LoggedTime");
+
+                    b.ToTable("EmployeeTime");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.EmployeeType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentId");
+                    b.ToTable("EmployeeType");
+                });
 
-                    b.ToTable("Employees");
+            modelBuilder.Entity("HR_manager.Server.Data.LoggedTime", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DepartmentId = 1,
-                            LastName = 0.0,
-                            MiddleName = "Alejandro",
-                            Name = "David"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DepartmentId = 2,
-                            LastName = 0.0,
-                            MiddleName = "Carlos",
-                            Name = "Peter"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DepartmentId = 3,
-                            LastName = 0.0,
-                            MiddleName = "Maria",
-                            Name = "Julia"
-                        });
+                    b.Property<DateTime>("DateLogged")
+                        .HasColumnType("Date");
+
+                    b.Property<int?>("FK_LoggedTime_To_LoggedTimeType")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Hours")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FK_LoggedTime_To_LoggedTimeType");
+
+                    b.ToTable("LoggedTime");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.LoggedTimeType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Description")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LoggedTimeType");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -309,13 +375,56 @@ namespace HR_manager.Server.Migrations
 
             modelBuilder.Entity("HR_manager.Server.Data.Employee", b =>
                 {
+                    b.HasOne("HR_manager.Server.Data.ApiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.EmployeeData", b =>
+                {
                     b.HasOne("HR_manager.Server.Data.Department", "Department")
-                        .WithMany("Employees")
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeData_To_Department");
+
+                    b.HasOne("HR_manager.Server.Data.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeData_To_Employee");
+
+                    b.HasOne("HR_manager.Server.Data.EmployeeType", "EmployeeType")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeData_To_EmployeeType");
 
                     b.Navigation("Department");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("EmployeeType");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.EmployeeTime", b =>
+                {
+                    b.HasOne("HR_manager.Server.Data.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeTime_to_Employee");
+
+                    b.HasOne("HR_manager.Server.Data.LoggedTime", "LoggedTime")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeTime_to_LoggedTime");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("LoggedTime");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.LoggedTime", b =>
+                {
+                    b.HasOne("HR_manager.Server.Data.LoggedTimeType", "LoggedTimeType")
+                        .WithMany()
+                        .HasForeignKey("FK_LoggedTime_To_LoggedTimeType");
+
+                    b.Navigation("LoggedTimeType");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -367,11 +476,6 @@ namespace HR_manager.Server.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("HR_manager.Server.Data.Department", b =>
-                {
-                    b.Navigation("Employees");
                 });
 #pragma warning restore 612, 618
         }

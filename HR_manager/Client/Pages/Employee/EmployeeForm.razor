@@ -18,19 +18,21 @@
             <ValidationMessage For="@(()=> employee.MiddleName)" />
         </div>
     </div>
+
     <div class="form-group">
-        <label>Department id: </label>
+        <label>Last Name: </label>
         <div>
-            <InputNumber class="form-control" @bind-Value="@employee.DepartmentId" />
-            <ValidationMessage For="@(()=> employee.DepartmentId)" />
+            <InputText class="form-control" @bind-Value="@employee.LastName" />
+            <ValidationMessage For="@(()=> employee.LastName)" />
         </div>
     </div>
+
     <button class="btn btn-success" type="submit">Save Changes</button>
 
 </EditForm>
 @code {
 
-    [Parameter] public Employee employee { get; set; }
+    [Parameter] public EmployeeType employee { get; set; }
     [Parameter] public EventCallback OnValidSubmit { get; set; }
 
 }

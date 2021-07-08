@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using HR_manager.Server.IRepository;
 using HR_manager.Server.Models;
-using HR_manager.Shared.Domain;
+using HR_manager.Server.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -51,7 +51,7 @@ namespace HR_manager.Server.Controllers
         {
             try
             {
-                var department = await _unitOfWork.Departments.Get(q => q.Id == id, new List<string> { "Employees" });
+                var department = await _unitOfWork.Departments.Get(q => q.Id == id);
                 var result = _mapper.Map<DepartmentDTO>(department);
                 return Ok(result);
             }
@@ -61,7 +61,7 @@ namespace HR_manager.Server.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -93,7 +93,7 @@ namespace HR_manager.Server.Controllers
             }
         }
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -112,6 +112,37 @@ namespace HR_manager.Server.Controllers
                 await _unitOfWork.Save();
 
                 return CreatedAtRoute("GetDepartment", new { id = department.Id }, department);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error. Please Try Again Later.");
+            }
+        }
+
+        //[Authorize]
+        [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteDepartment(int id)
+        {
+            if (id < 1)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                var employees = await _unitOfWork.Departments.Get(q => q.Id == id);
+                if (employees == null)
+                {
+                    return BadRequest("Submitted data is invalid");
+                }
+
+                await _unitOfWork.Departments.Delete(id);
+                await _unitOfWork.Save();
+
+                return NoContent();
             }
             catch (Exception ex)
             {

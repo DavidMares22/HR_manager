@@ -8,8 +8,8 @@ namespace HR_manager.Client.Repository
 {
     public interface IEmployeeRepository
     {
-        Task CreateEmployee(Employee employee);
-        Task<Employee> GetEmployee(int Id);
-        Task UpdateEmployee(Employee employee, int Id);
+        Task CreateEmployee(EmployeeType employee);
+        Task<EmployeeType> GetEmployee(int Id);
+        Task UpdateEmployee(EmployeeType employee, int Id);
     }
 }

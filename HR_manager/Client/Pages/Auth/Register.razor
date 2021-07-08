@@ -35,7 +35,7 @@
         <option value="Administrator">Administrator</option>
 
     </select>
-    <p>@mylist[0]</p>
+    
 
     <button type="submit" class="btn btn-primary">Register</button>
 
@@ -45,15 +45,15 @@
 
 
     private UserInfo userInfo = new UserInfo();
-    private List<string> mylist = new List<string>(new string[] { "User" });
+    private List<string> rolesList = new List<string>(new string[] { "User" });
 
     public string SelectedValue = "";
     public void selectedValue(ChangeEventArgs args)
     {
         SelectedValue = args.Value.ToString();
 
-        mylist.RemoveAt(0);
-        mylist.Add(SelectedValue);
+        rolesList.RemoveAt(0);
+        rolesList.Add(SelectedValue);
 
         
 
@@ -63,7 +63,7 @@
 
     private async Task CreateUser()
     {
-        userInfo.Roles = mylist;
+        userInfo.Roles = rolesList;
 
         List<string> userToken = await accountsRepository.Register(userInfo);
 
@@ -77,11 +77,7 @@
         }
 
 
-
-
-        //Console.WriteLine("response from register: " + userToken);
-        //await loginService.Login(userToken.Token);
-        //navigationManager.NavigateTo("");
+ 
     }
 
 }

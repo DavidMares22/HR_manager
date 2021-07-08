@@ -1,4 +1,4 @@
-﻿using HR_manager.Shared.Domain;
+﻿using HR_manager.Server.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -16,35 +16,22 @@ namespace HR_manager.Server.Data
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }
+        
+        public DbSet<EmployeeData> EmployeeData { get; set; }
+        public DbSet<EmployeeTime> EmployeeTime { get; set; }
+        public DbSet<EmployeeType> EmployeeType { get; set; }
+        public DbSet<LoggedTime> LoggedTime { get; set; }
+
+        public DbSet<LoggedTimeType> LoggedTimeType { get; set; }
+
+
 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Employee>().HasData(
-               new Employee
-               {
-                   Id = 1,
-                   Name = "David",
-                   MiddleName = "Alejandro",
-                   DepartmentId = 1
-               },
-               new Employee
-               {
-                   Id = 2,
-                   Name = "Peter",
-                   MiddleName = "Carlos",
-                   DepartmentId = 2,
-               },
-               new Employee
-               {
-                   Id = 3,
-                   Name = "Julia",
-                   MiddleName = "Maria",
-                   DepartmentId = 3
-               }
-           );
+           
 
 
             builder.Entity<IdentityRole>().HasData(
@@ -61,24 +48,7 @@ namespace HR_manager.Server.Data
             );
 
 
-            builder.Entity<Department>().HasData(
-              new Department
-              {
-                  Id = 1,
-                  Name = "Sales",
-              },
-              new Department
-              {
-                  Id = 2,
-                  Name = "IT",
-              
-              },
-              new Department
-              {
-                  Id = 3,
-                  Name = "HR",
-              }
-          );
+            
         }
 
 

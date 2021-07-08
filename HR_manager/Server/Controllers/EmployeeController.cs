@@ -2,14 +2,16 @@
 using HR_manager.Server.Data;
 using HR_manager.Server.IRepository;
 using HR_manager.Server.Models;
-using HR_manager.Shared.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+
 
 namespace HR_manager.Server.Controllers
 {
@@ -19,11 +21,13 @@ namespace HR_manager.Server.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApiUser> _userManager;
 
-        public EmployeeController(IUnitOfWork unitOfWork, IMapper mapper)
+        public EmployeeController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApiUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -127,7 +131,7 @@ namespace HR_manager.Server.Controllers
         }
 
 
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -141,7 +145,12 @@ namespace HR_manager.Server.Controllers
 
             try
             {
+                ClaimsPrincipal currentUser = this.User;
+                var currentUserID = currentUser.FindFirst("UserId").Value;
+
+
                 var employee = _mapper.Map<Employee>(employeeDTO);
+                employee.UserId = currentUserID;
                 await _unitOfWork.Employees.Insert(employee);
                 await _unitOfWork.Save();
 

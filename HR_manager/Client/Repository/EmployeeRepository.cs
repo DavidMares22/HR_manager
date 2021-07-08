@@ -16,7 +16,7 @@ namespace HR_manager.Client.Repository
         {
             this.httpService = httpService;
         }
-        public async Task CreateEmployee(Employee employee)
+        public async Task CreateEmployee(EmployeeType employee)
         {
             var response = await httpService.Post(url, employee);
             if (!response.Success)
@@ -24,9 +24,9 @@ namespace HR_manager.Client.Repository
                 Console.WriteLine("error creating employee");
             }
         }
-        public async Task<Employee> GetEmployee(int Id)
+        public async Task<EmployeeType> GetEmployee(int Id)
         {
-            var response = await httpService.Get<Employee>($"{url}/{Id}");
+            var response = await httpService.Get<EmployeeType>($"{url}/{Id}");
             if (!response.Success)
             {
                 Console.WriteLine("error creating employee");
@@ -34,7 +34,7 @@ namespace HR_manager.Client.Repository
             return response.Response;
         }
 
-        public async Task UpdateEmployee(Employee employee, int Id)
+        public async Task UpdateEmployee(EmployeeType employee, int Id)
         {
             var response = await httpService.Put($"{url}/{Id}", employee);
             if (!response.Success)

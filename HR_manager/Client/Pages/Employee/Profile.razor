@@ -1,18 +1,14 @@
-﻿@page "/employee/create/"
+﻿@page "/profile/"
 @inject NavigationManager navigationManager
 @inject IEmployeeRepository employeeRepository
-@attribute [Authorize(Roles = "Administrator")]
 
-<h3>Create Employee</h3>
-
-
-
+<h1>Create Employee</h1>
 
 <EmployeeForm employee="employee" OnValidSubmit="Create" />
 
 @code {
 
-    private Employee employee = new Employee();
+    private EmployeeType employee = new EmployeeType();
 
     private async Task Create()
     {
@@ -28,4 +24,5 @@
 
 
     }
+
 }

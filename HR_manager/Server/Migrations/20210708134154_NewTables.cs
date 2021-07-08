@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HR_manager.Server.Migrations
 {
-    public partial class AddedIdentity : Migration
+    public partial class NewTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -46,6 +46,45 @@ namespace HR_manager.Server.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Departments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmployeeType",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeeType", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LoggedTimeType",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Description = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoggedTimeType", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -154,6 +193,109 @@ namespace HR_manager.Server.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Employees",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Employees", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Employees_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "LoggedTime",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DateLogged = table.Column<DateTime>(type: "Date", nullable: false),
+                    Hours = table.Column<double>(type: "float", nullable: false),
+                    FK_LoggedTime_To_LoggedTimeType = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LoggedTime", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LoggedTime_LoggedTimeType_FK_LoggedTime_To_LoggedTimeType",
+                        column: x => x.FK_LoggedTime_To_LoggedTimeType,
+                        principalTable: "LoggedTimeType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmployeeData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    HourlyRate = table.Column<double>(type: "float", nullable: false),
+                    FK_EmployeeData_To_Employee = table.Column<int>(type: "int", nullable: true),
+                    FK_EmployeeData_To_EmployeeType = table.Column<int>(type: "int", nullable: true),
+                    FK_EmployeeData_To_Department = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeeData", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmployeeData_Departments_FK_EmployeeData_To_Department",
+                        column: x => x.FK_EmployeeData_To_Department,
+                        principalTable: "Departments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EmployeeData_Employees_FK_EmployeeData_To_Employee",
+                        column: x => x.FK_EmployeeData_To_Employee,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EmployeeData_EmployeeType_FK_EmployeeData_To_EmployeeType",
+                        column: x => x.FK_EmployeeData_To_EmployeeType,
+                        principalTable: "EmployeeType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EmployeeTime",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FK_EmployeeTime_to_Employee = table.Column<int>(type: "int", nullable: true),
+                    FK_EmployeeTime_to_LoggedTime = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeeTime", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EmployeeTime_Employees_FK_EmployeeTime_to_Employee",
+                        column: x => x.FK_EmployeeTime_to_Employee,
+                        principalTable: "Employees",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EmployeeTime_LoggedTime_FK_EmployeeTime_to_LoggedTime",
+                        column: x => x.FK_EmployeeTime_to_LoggedTime,
+                        principalTable: "LoggedTime",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -192,6 +334,41 @@ namespace HR_manager.Server.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeeData_FK_EmployeeData_To_Department",
+                table: "EmployeeData",
+                column: "FK_EmployeeData_To_Department");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeeData_FK_EmployeeData_To_Employee",
+                table: "EmployeeData",
+                column: "FK_EmployeeData_To_Employee");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeeData_FK_EmployeeData_To_EmployeeType",
+                table: "EmployeeData",
+                column: "FK_EmployeeData_To_EmployeeType");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Employees_UserId",
+                table: "Employees",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeeTime_FK_EmployeeTime_to_Employee",
+                table: "EmployeeTime",
+                column: "FK_EmployeeTime_to_Employee");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeeTime_FK_EmployeeTime_to_LoggedTime",
+                table: "EmployeeTime",
+                column: "FK_EmployeeTime_to_LoggedTime");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LoggedTime_FK_LoggedTime_To_LoggedTimeType",
+                table: "LoggedTime",
+                column: "FK_LoggedTime_To_LoggedTimeType");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -212,10 +389,31 @@ namespace HR_manager.Server.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "EmployeeData");
+
+            migrationBuilder.DropTable(
+                name: "EmployeeTime");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Departments");
+
+            migrationBuilder.DropTable(
+                name: "EmployeeType");
+
+            migrationBuilder.DropTable(
+                name: "Employees");
+
+            migrationBuilder.DropTable(
+                name: "LoggedTime");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "LoggedTimeType");
         }
     }
 }

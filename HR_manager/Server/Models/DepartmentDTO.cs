@@ -16,6 +16,5 @@ namespace HR_manager.Server.Models
     public class DepartmentDTO: CreateDepartmentDTO
     {
         public int Id { get; set; }
-        public IList<EmployeeDTO> Employees { get; set; }
     }
 }
