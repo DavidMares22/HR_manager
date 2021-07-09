@@ -1,15 +1,15 @@
 ﻿@page "/register"
 
 @inject IAccountsRepository accountsRepository
-@inject NavigationManager navigationManager
+@inject IEmployeeRepository employeeRepository
 @inject ILoginService loginService
-@inject IDisplayMessage displayMessage 
+@inject IDisplayMessage displayMessage
 
 @using HR_manager.Client.Auth
 
 <h3>Register</h3>
 
-<EditForm Model="userInfo" OnValidSubmit="CreateUser">
+<EditForm Model="userInfo" OnSubmit="CreateUser">
     <DataAnnotationsValidator />
 
     <div class="form-group">
@@ -28,14 +28,39 @@
         </div>
     </div>
 
-    <select id="myselect" class="form-control" @onchange="selectedValue">
-        
+    <div class="form-group">
+        <label>First Name:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@userInfo.FirstName" />
+            <ValidationMessage For="@(() => userInfo.FirstName)" />
+        </div>
+    </div>
 
-        <option value="User">User</option>
-        <option value="Administrator">Administrator</option>
+    <div class="form-group">
+        <label>Middle Name:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@userInfo.MiddleName" />
+            
+        </div>
+    </div>
 
-    </select>
-    
+    <div class="form-group">
+        <label>Last Name:</label>
+        <div>
+            <InputText class="form-control" @bind-Value="@userInfo.LastName" />
+            <ValidationMessage For="@(() => userInfo.LastName)" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label>Role:</label>
+        <select id="myselect" class="form-control" @onchange="selectedValue">
+
+            <option value="User">User</option>
+            <option value="Administrator">Administrator</option>
+
+        </select>
+    </div>
 
     <button type="submit" class="btn btn-primary">Register</button>
 
@@ -45,6 +70,7 @@
 
 
     private UserInfo userInfo = new UserInfo();
+    private EmployeeType employee = new EmployeeType();
     private List<string> rolesList = new List<string>(new string[] { "User" });
 
     public string SelectedValue = "";
@@ -55,7 +81,7 @@
         rolesList.RemoveAt(0);
         rolesList.Add(SelectedValue);
 
-        
+
 
 
 
@@ -73,11 +99,25 @@
         }
         else
         {
-            await displayMessage.DisplaySuccessMessage(string.Join(" ", userToken));
+
+            try
+            {
+                employee.Name = userInfo.FirstName;
+                employee.MiddleName = userInfo.MiddleName;
+                employee.LastName = userInfo.LastName;
+                employee.UserId = userToken.ElementAt(2);
+
+                await employeeRepository.CreateEmployee(employee);
+                await displayMessage.DisplaySuccessMessage(string.Join(" ", userToken));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error create employee " + ex);
+            }
         }
 
 
- 
+
     }
 
 }

@@ -61,7 +61,7 @@ namespace HR_manager.Server.Controllers
 
              
 
-                return Ok(new { Success = $"User was successfully created {userDTO.Email}" });
+                return Ok(new { Success = $"User was successfully created {userDTO.Email}", UserId = user.Id });
 
 
             }

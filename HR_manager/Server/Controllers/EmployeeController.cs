@@ -145,12 +145,12 @@ namespace HR_manager.Server.Controllers
 
             try
             {
-                ClaimsPrincipal currentUser = this.User;
-                var currentUserID = currentUser.FindFirst("UserId").Value;
+                //ClaimsPrincipal currentUser = this.User;
+                //var currentUserID = currentUser.FindFirst("UserId").Value;
 
 
                 var employee = _mapper.Map<Employee>(employeeDTO);
-                employee.UserId = currentUserID;
+                //employee.UserId = currentUserID;
                 await _unitOfWork.Employees.Insert(employee);
                 await _unitOfWork.Save();
 

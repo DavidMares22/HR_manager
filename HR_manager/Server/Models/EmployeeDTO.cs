@@ -12,6 +12,9 @@ namespace HR_manager.Server.Models
         [StringLength(maximumLength: 50, ErrorMessage = " Name Is Too Long")]
         public string Name { get; set; }
 
+ 
+        public string UserId { get; set; }
+
         [Required]
         [StringLength(maximumLength: 50, ErrorMessage = "Middle Name Is Too Long")]
         public string MiddleName { get; set; }

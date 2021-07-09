@@ -42,6 +42,7 @@ namespace HR_manager.Client.Repository
             List<string> success = new List<string>();
             success.Add("Success: ");
             success.Add(successMessage.success);
+            success.Add(successMessage.userId);
             return success;
         }
 

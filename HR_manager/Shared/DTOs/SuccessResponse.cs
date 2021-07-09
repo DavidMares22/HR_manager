@@ -9,5 +9,6 @@ namespace HR_manager.Shared.DTOs
     public class SuccessResponse
     {
         public string success { get; set; }
+        public string userId { get; set; }
     }
 }

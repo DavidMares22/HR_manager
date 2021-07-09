@@ -10,6 +10,8 @@ namespace HR_manager.Shared.Domain
     public class EmployeeType
     {
         public int Id { get; set; }
+
+        public string UserId { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
