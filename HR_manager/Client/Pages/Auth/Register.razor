@@ -9,8 +9,9 @@
 
 <h3>Register</h3>
 
-<EditForm Model="userInfo" OnSubmit="CreateUser">
+<EditForm Model="@userInfo" OnValidSubmit="CreateUser">
     <DataAnnotationsValidator />
+    <ValidationSummary />
 
     <div class="form-group">
         <label>Email:</label>
@@ -40,7 +41,7 @@
         <label>Middle Name:</label>
         <div>
             <InputText class="form-control" @bind-Value="@userInfo.MiddleName" />
-            
+
         </div>
     </div>
 
@@ -80,11 +81,6 @@
 
         rolesList.RemoveAt(0);
         rolesList.Add(SelectedValue);
-
-
-
-
-
     }
 
     private async Task CreateUser()
@@ -115,8 +111,6 @@
                 Console.WriteLine("Error create employee " + ex);
             }
         }
-
-
 
     }
 

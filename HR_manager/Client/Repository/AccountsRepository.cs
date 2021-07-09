@@ -46,20 +46,16 @@ namespace HR_manager.Client.Repository
             return success;
         }
 
-        public async Task<List<string>> Login(UserInfo userInfo)
+        public async Task<List<string>> Login(UserLogin userInfo)
         {
-            var httpResponse = await httpService.Post<UserInfo, UserToken>($"{baseURL}/login", userInfo);
+            var httpResponse = await httpService.Post<UserLogin, UserToken>($"{baseURL}/login", userInfo);
 
             if (!httpResponse.Success)
             {
                 List<string> error = new List<string>();
                 error.Add("Error: ");
-
                 ErrorResponse errorMessage = await httpResponse.GetBody();
-
                 error.Add(errorMessage.ToString());
-
-
                 return error;
             }
 

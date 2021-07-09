@@ -8,7 +8,6 @@ namespace HR_manager.Shared.DTOs
 {
     public class UserToken
     {
-        public string token { get; set; }
-        public DateTime Expiration { get; set; }
+        public string token { get; set; }        
     }
 }
