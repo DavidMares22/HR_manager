@@ -24,6 +24,36 @@ namespace HR_manager.Server.Controllers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateLoggedTime(int id, [FromBody] UpdateTimeDTO loggedDTO)
+        {
+            if (!ModelState.IsValid || id < 1)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                var log = await _unitOfWork.LoggedTime.Get(q => q.Id == id);
+                if (log == null)
+                {
+                    return BadRequest("Submitted data is invalid");
+                }
+
+                _mapper.Map(loggedDTO, log);
+                _unitOfWork.LoggedTime.Update(log);
+                await _unitOfWork.Save();
+
+                return Ok("Success");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server Error. Please Try Again Later.");
+            }
+        }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]

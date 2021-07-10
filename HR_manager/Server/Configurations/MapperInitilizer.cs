@@ -17,6 +17,7 @@ namespace HR_manager.Server.Configurations
             CreateMap<Employee, EmployeeDTO>().ReverseMap();
             CreateMap<EmployeeData, EmpDataDTO>().ReverseMap();
             CreateMap<LoggedTime, LoggedTimeDTO>().ReverseMap();
+            CreateMap<LoggedTime, UpdateTimeDTO>().ReverseMap();
             CreateMap<EmployeeTime, EmpTimeDTO>().ReverseMap();
             CreateMap<EmployeeTime, EmpTimeIDsDTO>().ReverseMap();
             CreateMap<Employee, CreateEmployeeDTO>().ReverseMap();

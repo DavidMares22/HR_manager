@@ -7,6 +7,7 @@
 @inject HttpClient _client
 @inject IJSRuntime js
 
+    <HeadingComponent Text="Logged time" />
     <div class="col-lg-6 offset-lg-3 ">
         <EditForm Model="@empTime" OnValidSubmit="CreateUser">
             <DataAnnotationsValidator />
@@ -63,10 +64,8 @@
                                 <td>@log.Hours</td>
                                 <td>@log.DateLogged.ToShortDateString()</td>
                                 <td>
-                                    <a href="" class="btn btn-primary">
-                                        <span class="oi oi-book"></span>
-                                    </a>
-                                    <a href="" class="btn btn-warning">
+                                  
+                                    <a href="/management/edit/@log.Id" class="btn btn-warning">
                                         <span class="oi oi-pencil"></span>
                                     </a>
                                     <button class="btn btn-danger" @onclick="@(()=>Delete(log.Id))">

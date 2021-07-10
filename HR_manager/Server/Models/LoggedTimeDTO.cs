@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace HR_manager.Server.Models
 {
-    public class LoggedTimeDTO
+    public class UpdateTimeDTO
     {
-        public int Id { get; set; }
         [Required]
         public DateTime DateLogged { get; set; }
         [Required]
@@ -17,5 +16,13 @@ namespace HR_manager.Server.Models
 
         [Required]
         public int FK_LoggedTime_To_LoggedTimeType { get; set; }
+
+    }
+
+    public class LoggedTimeDTO: UpdateTimeDTO
+    {
+
+        public int Id { get; set; }
+      
     }
 }
