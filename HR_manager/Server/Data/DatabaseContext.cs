@@ -31,7 +31,62 @@ namespace HR_manager.Server.Data
         {
             base.OnModelCreating(builder);
 
-           
+            builder.Entity<Department>().HasData(
+             new Department
+             {
+                 Id = 1,
+                 Name = "IT"
+
+             },
+             new Department
+             {
+                 Id = 2,
+                 Name = "Management"
+
+             },
+              new Department
+              {
+                  Id = 3,
+                  Name = "Sales"
+
+              }
+         );
+
+
+            builder.Entity<EmployeeType>().HasData(
+               new EmployeeType
+               {
+                   Id = 1,
+                   Description = "Contractor"
+                   
+               },
+               new EmployeeType
+               {
+                   Id = 2,
+                   Description = "Permanent"
+                   
+               }
+           );
+
+            builder.Entity<LoggedTimeType>().HasData(
+               new LoggedTimeType
+               {
+                   Id = 1,
+                   Description = "Regular"
+               },
+               new LoggedTimeType
+               {
+                   Id = 2,
+                   Description = "Sick"
+                   
+               },
+                new LoggedTimeType
+                {
+                    Id = 3,
+                    Description = "Vacation"
+
+                }
+           );
 
 
             builder.Entity<IdentityRole>().HasData(

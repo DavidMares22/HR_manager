@@ -8,6 +8,11 @@ namespace HR_manager.Server.IRepository
 {
     public interface IUnitOfWork : IDisposable
     {
+        
+        IGenericRepository<EmployeeTime> EmployeeTime { get; }
+
+        IGenericRepository<LoggedTime> LoggedTime { get; }
+        IGenericRepository<EmployeeData> EmployeeData { get; }
         IGenericRepository<Employee> Employees { get; }
         IGenericRepository<Department> Departments { get; }
         Task Save();

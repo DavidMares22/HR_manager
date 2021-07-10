@@ -11,7 +11,7 @@ namespace HR_manager.Server.Data
         public int Id { get; set; }
 
         [Required]
-        public int Description { get; set; }
+        public string Description { get; set; }
 
 
     }

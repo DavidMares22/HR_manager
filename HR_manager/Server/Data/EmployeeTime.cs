@@ -11,10 +11,10 @@ namespace HR_manager.Server.Data
         public int Id { get; set; }
 
         [ForeignKey("FK_EmployeeTime_to_Employee")]
-        public virtual Employee Employee { get; set; }
+        public string FK_EmployeeTime_to_Employee { get; set; }
 
         [ForeignKey("FK_EmployeeTime_to_LoggedTime")]
-        public virtual LoggedTime LoggedTime { get; set; }
+        public int FK_EmployeeTime_to_LoggedTime { get; set; }
 
     }
 }

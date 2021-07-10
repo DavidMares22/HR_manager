@@ -4,14 +4,16 @@ using HR_manager.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HR_manager.Server.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20210709190418_x")]
+    partial class x
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,12 +186,16 @@ namespace HR_manager.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("FK_EmployeeTime_to_Employee")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("FK_EmployeeTime_to_LoggedTime")
+                    b.Property<int?>("FK_EmployeeTime_to_LoggedTime")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FK_EmployeeTime_to_Employee");
+
+                    b.HasIndex("FK_EmployeeTime_to_LoggedTime");
 
                     b.ToTable("EmployeeTime");
                 });
@@ -305,15 +311,15 @@ namespace HR_manager.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "44339e33-ecca-411d-bef9-b51f13a2d025",
-                            ConcurrencyStamp = "89c47daa-1fff-4876-8be4-16b3a41936c3",
+                            Id = "0f2252d3-1937-4c61-b8fe-1af14503abbf",
+                            ConcurrencyStamp = "fd230fa0-bfb3-4b15-a752-8110c51d9bda",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "cc76234a-3f96-4104-a450-5daede00ff36",
-                            ConcurrencyStamp = "12247b71-27ad-4ecb-b2ff-c7b531a940f5",
+                            Id = "09143de3-0a1d-4bdd-b1cf-19a06ee475e2",
+                            ConcurrencyStamp = "2afb7636-a23f-4476-8b6f-9bd25650f5f7",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -430,6 +436,21 @@ namespace HR_manager.Server.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.EmployeeTime", b =>
+                {
+                    b.HasOne("HR_manager.Server.Data.ApiUser", "Employee")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeTime_to_Employee");
+
+                    b.HasOne("HR_manager.Server.Data.LoggedTime", "LoggedTime")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeTime_to_LoggedTime");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("LoggedTime");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -10,6 +10,9 @@ namespace HR_manager.Client.Static
         public static string Prefix = "api";
 
         public static string EmployeesEndpoint = $"{Prefix}/Employee";
-       
+        public static string LoggedTimeEndpoint = $"{Prefix}/LoggedTime";
+        public static string EmployeeTimeEndpoint = $"{Prefix}/EmployeeTime";
+        
+
     }
 }

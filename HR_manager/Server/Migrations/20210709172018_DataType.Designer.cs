@@ -4,14 +4,16 @@ using HR_manager.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HR_manager.Server.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20210709172018_DataType")]
+    partial class DataType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -184,12 +186,16 @@ namespace HR_manager.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("FK_EmployeeTime_to_Employee")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("FK_EmployeeTime_to_LoggedTime")
+                    b.Property<int?>("FK_EmployeeTime_to_LoggedTime")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FK_EmployeeTime_to_Employee");
+
+                    b.HasIndex("FK_EmployeeTime_to_LoggedTime");
 
                     b.ToTable("EmployeeTime");
                 });
@@ -232,13 +238,15 @@ namespace HR_manager.Server.Migrations
                     b.Property<DateTime>("DateLogged")
                         .HasColumnType("Date");
 
-                    b.Property<int>("FK_LoggedTime_To_LoggedTimeType")
+                    b.Property<int?>("FK_LoggedTime_To_LoggedTimeType")
                         .HasColumnType("int");
 
                     b.Property<double>("Hours")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FK_LoggedTime_To_LoggedTimeType");
 
                     b.ToTable("LoggedTime");
                 });
@@ -305,15 +313,15 @@ namespace HR_manager.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "44339e33-ecca-411d-bef9-b51f13a2d025",
-                            ConcurrencyStamp = "89c47daa-1fff-4876-8be4-16b3a41936c3",
+                            Id = "49664064-82cf-4ccd-a733-541a8d7b64c2",
+                            ConcurrencyStamp = "c046db7e-ceb3-4f62-9a27-7bb17cd3c3ef",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "cc76234a-3f96-4104-a450-5daede00ff36",
-                            ConcurrencyStamp = "12247b71-27ad-4ecb-b2ff-c7b531a940f5",
+                            Id = "e41ac5f1-182c-472e-85cc-939a751b274e",
+                            ConcurrencyStamp = "1d4162e2-42ee-4dc2-a374-6183c7eff5d2",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -430,6 +438,30 @@ namespace HR_manager.Server.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.EmployeeTime", b =>
+                {
+                    b.HasOne("HR_manager.Server.Data.ApiUser", "Employee")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeTime_to_Employee");
+
+                    b.HasOne("HR_manager.Server.Data.LoggedTime", "LoggedTime")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeTime_to_LoggedTime");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("LoggedTime");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.LoggedTime", b =>
+                {
+                    b.HasOne("HR_manager.Server.Data.LoggedTimeType", "LoggedTimeType")
+                        .WithMany()
+                        .HasForeignKey("FK_LoggedTime_To_LoggedTimeType");
+
+                    b.Navigation("LoggedTimeType");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

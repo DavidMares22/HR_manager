@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HR_manager.Server.Data
+namespace HR_manager.Server.Models
 {
-    public class LoggedTime
+    public class LoggedTimeDTO
     {
         public int Id { get; set; }
-
-        [Column(TypeName = "Date")]
+        [Required]
         public DateTime DateLogged { get; set; }
-
+        [Required]
         [Range(0, 12)]
         public Double Hours { get; set; }
 
-        [ForeignKey("FK_LoggedTime_To_LoggedTimeType")]
+        [Required]
         public int FK_LoggedTime_To_LoggedTimeType { get; set; }
-
     }
 }

@@ -14,6 +14,9 @@ namespace HR_manager.Server.Repository
         private readonly DatabaseContext _context;
         private IGenericRepository<Employee> _employees;
         private IGenericRepository<Department> _departments;
+        private IGenericRepository<EmployeeData> _empdata;
+        private IGenericRepository<LoggedTime> _loggedtime;
+        private IGenericRepository<EmployeeTime> _empTime;
 
         public UnitOfWork(DatabaseContext context)
         {
@@ -22,6 +25,13 @@ namespace HR_manager.Server.Repository
         public IGenericRepository<Employee> Employees => _employees ??= new GenericRepository<Employee>(_context);
 
         public IGenericRepository<Department> Departments => _departments ??= new GenericRepository<Department>(_context);
+
+        public IGenericRepository<EmployeeData> EmployeeData => _empdata ??= new GenericRepository<EmployeeData>(_context);
+
+        public IGenericRepository<LoggedTime> LoggedTime => _loggedtime ??= new GenericRepository<LoggedTime>(_context);
+        
+        public IGenericRepository<EmployeeTime> EmployeeTime => _empTime ??= new GenericRepository<EmployeeTime>(_context);
+
 
         public void Dispose()
         {

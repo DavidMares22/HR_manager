@@ -29,9 +29,22 @@ namespace HR_manager.Client.Helper
 
 
             ErrorResponse x = JsonConvert.DeserializeObject<ErrorResponse>(response);
-            
+
 
             //Console.WriteLine(x.errors.Email[0]);
+
+            return x;
+        }
+
+        public async Task<ResponseTimeLog> GetBodyTimeLog()
+        {
+            string response = await HttpResponseMessage.Content.ReadAsStringAsync();
+
+
+
+            ResponseTimeLog x = JsonConvert.DeserializeObject<ResponseTimeLog>(response);
+
+
 
             return x;
         }

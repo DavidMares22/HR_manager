@@ -3,22 +3,19 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace HR_manager.Server.Data
+namespace HR_manager.Shared.DTOs
 {
-    public class LoggedTime
+    public class EmpTimeForm
     {
-        public int Id { get; set; }
-
-        [Column(TypeName = "Date")]
+        [Required]
+        [Range(typeof(DateTime), "2021-06-01", "2021-06-30")]
         public DateTime DateLogged { get; set; }
 
-        [Range(0, 12)]
+        [Required]
+        [Range(1, 12)]
         public Double Hours { get; set; }
-
-        [ForeignKey("FK_LoggedTime_To_LoggedTimeType")]
-        public int FK_LoggedTime_To_LoggedTimeType { get; set; }
-
     }
 }

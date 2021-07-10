@@ -13,22 +13,22 @@ namespace HR_manager.Server.Data
 
         public Double HourlyRate { get; set; }
 
-        
 
         [ForeignKey("FK_EmployeeData_To_Employee")]
-        public virtual Employee Employee { get; set; }
+        //public ApiUser ApiUser { get; set; }
+        public string FK_EmployeeData_To_Employee { get; set; }
 
 
-      
 
         [ForeignKey("FK_EmployeeData_To_EmployeeType")]
-        public virtual EmployeeType EmployeeType { get; set; }
+        //public EmployeeType EmployeeType { get; set; }
+        public int FK_EmployeeData_To_EmployeeType { get; set; }
 
- 
 
         [ForeignKey("FK_EmployeeData_To_Department")]
-        public virtual Department Department { get; set; }
-
+        //public Department Department { get; set; }
+        public int FK_EmployeeData_To_Department { get; set; }
+ 
         
     }
 }

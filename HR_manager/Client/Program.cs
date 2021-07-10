@@ -25,6 +25,8 @@ namespace HR_manager.Client
             builder.Services.AddScoped<IHttpService, HttpService>();
             builder.Services.AddScoped<IDisplayMessage, DisplayMessage>();
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<ILoggedTimeRepository, LoggedTimeRepository>();
+            builder.Services.AddScoped<IEmployeeTimeRepository, EmployeeTimeRepository>();
             builder.Services.AddAuthorizationCore();
             builder.Services.AddScoped<IAccountsRepository, AccountsRepository>();
             builder.Services.AddScoped<JWTAuthenticationStateProvider>();

@@ -4,14 +4,16 @@ using HR_manager.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HR_manager.Server.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20210709130250_FKChanged")]
+    partial class FKChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,23 +106,6 @@ namespace HR_manager.Server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "IT"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Management"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Sales"
-                        });
                 });
 
             modelBuilder.Entity("HR_manager.Server.Data.Employee", b =>
@@ -159,19 +144,25 @@ namespace HR_manager.Server.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("FK_EmployeeData_To_Department")
+                    b.Property<int?>("FK_EmployeeData_To_Department")
                         .HasColumnType("int");
 
                     b.Property<string>("FK_EmployeeData_To_Employee")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("FK_EmployeeData_To_EmployeeType")
+                    b.Property<int?>("FK_EmployeeData_To_EmployeeType")
                         .HasColumnType("int");
 
                     b.Property<double>("HourlyRate")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FK_EmployeeData_To_Department");
+
+                    b.HasIndex("FK_EmployeeData_To_Employee");
+
+                    b.HasIndex("FK_EmployeeData_To_EmployeeType");
 
                     b.ToTable("EmployeeData");
                 });
@@ -184,12 +175,16 @@ namespace HR_manager.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("FK_EmployeeTime_to_Employee")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("FK_EmployeeTime_to_LoggedTime")
+                    b.Property<int?>("FK_EmployeeTime_to_LoggedTime")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FK_EmployeeTime_to_Employee");
+
+                    b.HasIndex("FK_EmployeeTime_to_LoggedTime");
 
                     b.ToTable("EmployeeTime");
                 });
@@ -232,13 +227,15 @@ namespace HR_manager.Server.Migrations
                     b.Property<DateTime>("DateLogged")
                         .HasColumnType("Date");
 
-                    b.Property<int>("FK_LoggedTime_To_LoggedTimeType")
+                    b.Property<int?>("FK_LoggedTime_To_LoggedTimeType")
                         .HasColumnType("int");
 
                     b.Property<double>("Hours")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FK_LoggedTime_To_LoggedTimeType");
 
                     b.ToTable("LoggedTime");
                 });
@@ -305,15 +302,15 @@ namespace HR_manager.Server.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "44339e33-ecca-411d-bef9-b51f13a2d025",
-                            ConcurrencyStamp = "89c47daa-1fff-4876-8be4-16b3a41936c3",
+                            Id = "1f3a673e-3e2e-4cf4-9d66-ac323421736d",
+                            ConcurrencyStamp = "22808a11-a59c-4909-a483-5e9b0459e014",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "cc76234a-3f96-4104-a450-5daede00ff36",
-                            ConcurrencyStamp = "12247b71-27ad-4ecb-b2ff-c7b531a940f5",
+                            Id = "cace9342-1f41-4771-a3d2-c6b51461959a",
+                            ConcurrencyStamp = "73344773-6693-43c0-b74f-f75f524c4fd5",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         });
@@ -430,6 +427,51 @@ namespace HR_manager.Server.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.EmployeeData", b =>
+                {
+                    b.HasOne("HR_manager.Server.Data.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeData_To_Department");
+
+                    b.HasOne("HR_manager.Server.Data.ApiUser", "Employee")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeData_To_Employee");
+
+                    b.HasOne("HR_manager.Server.Data.EmployeeType", "EmployeeType")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeData_To_EmployeeType");
+
+                    b.Navigation("Department");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("EmployeeType");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.EmployeeTime", b =>
+                {
+                    b.HasOne("HR_manager.Server.Data.ApiUser", "Employee")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeTime_to_Employee");
+
+                    b.HasOne("HR_manager.Server.Data.LoggedTime", "LoggedTime")
+                        .WithMany()
+                        .HasForeignKey("FK_EmployeeTime_to_LoggedTime");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("LoggedTime");
+                });
+
+            modelBuilder.Entity("HR_manager.Server.Data.LoggedTime", b =>
+                {
+                    b.HasOne("HR_manager.Server.Data.LoggedTimeType", "LoggedTimeType")
+                        .WithMany()
+                        .HasForeignKey("FK_LoggedTime_To_LoggedTimeType");
+
+                    b.Navigation("LoggedTimeType");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
