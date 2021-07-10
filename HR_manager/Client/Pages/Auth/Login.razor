@@ -5,55 +5,65 @@
 @inject ILoginService loginService
 @inject IDisplayMessage displayMessage
 
+
 @using HR_manager.Client.Auth
 
-<h3>Login</h3>
+<HeadingComponent Text="Login" />
+
+<div class="col-lg-6 offset-lg-3 ">
+    <EditForm Model="userLogin" OnValidSubmit="CreateUser">
+        <DataAnnotationsValidator />
 
 
-<EditForm Model="userLogin" OnValidSubmit="CreateUser">
-    <DataAnnotationsValidator />
-    
-
-    <div class="form-group">
-        <label>Email:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@userLogin.Email" />
-            <ValidationMessage For="@(() => userLogin.Email)" />
+        <div class="form-group">
+            <label>Email:</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@userLogin.Email" />
+                <ValidationMessage For="@(() => userLogin.Email)" />
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <label>Password:</label>
-        <div>
-            <InputPassword class="form-control" @bind-Value="@userLogin.Password" />
-            <ValidationMessage For="@(() => userLogin.Password)" />
+        <div class="form-group">
+            <label>Password:</label>
+            <div>
+                <InputPassword class="form-control" @bind-Value="@userLogin.Password" />
+                <ValidationMessage For="@(() => userLogin.Password)" />
+            </div>
         </div>
-    </div>
 
-    <button type="submit" class="btn btn-primary">Login</button>
+    <SfSpinner @bind-Visible="@VisibleProperty">
+    </SfSpinner>
 
-</EditForm>
+        <button type="submit" class="btn btn-dark btn-block">Login</button>
 
+    </EditForm>
+
+</div>
 
 
 @code {
+    private bool VisibleProperty { get; set; } = false;
     private UserLogin userLogin = new UserLogin();
 
     private async Task CreateUser()
     {
+        VisibleProperty = true;
         List<string> userToken = await accountsRepository.Login(userLogin);
-        
+
 
         if (userToken.ElementAt(0) == "Error: ")
         {
             await displayMessage.DisplayErrorMessage(string.Join(" ", userToken));
+            VisibleProperty = false;
         }
         else
         {
             Console.WriteLine(userToken.ElementAt(1));
             await loginService.Login(userToken.ElementAt(1));
+            VisibleProperty = false;
             navigationManager.NavigateTo("");
         }
+
     }
 
 }

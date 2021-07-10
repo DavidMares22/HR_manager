@@ -7,65 +7,72 @@
 
 @using HR_manager.Client.Auth
 
-<h3>Register</h3>
 
-<EditForm Model="@userInfo" OnValidSubmit="CreateUser">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<HeadingComponent  Text="Register"/>
 
-    <div class="form-group">
-        <label>Email:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@userInfo.Email" />
-            <ValidationMessage For="@(() => userInfo.Email)" />
+<div class="col-lg-6 offset-lg-3 ">
+    <EditForm Model="@userInfo" OnValidSubmit="CreateUser">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label>Email:</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@userInfo.Email" />
+                <ValidationMessage For="@(() => userInfo.Email)" />
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <label>Password:</label>
-        <div>
-            <InputPassword class="form-control" @bind-Value="@userInfo.Password" />
-            <ValidationMessage For="@(() => userInfo.Password)" />
+        <div class="form-group">
+            <label>Password:</label>
+            <div>
+                <InputPassword class="form-control" @bind-Value="@userInfo.Password" />
+                <ValidationMessage For="@(() => userInfo.Password)" />
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <label>First Name:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@userInfo.FirstName" />
-            <ValidationMessage For="@(() => userInfo.FirstName)" />
+        <div class="form-group">
+            <label>First Name:</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@userInfo.FirstName" />
+                <ValidationMessage For="@(() => userInfo.FirstName)" />
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <label>Middle Name:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@userInfo.MiddleName" />
+        <div class="form-group">
+            <label>Middle Name:</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@userInfo.MiddleName" />
 
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <label>Last Name:</label>
-        <div>
-            <InputText class="form-control" @bind-Value="@userInfo.LastName" />
-            <ValidationMessage For="@(() => userInfo.LastName)" />
+        <div class="form-group">
+            <label>Last Name:</label>
+            <div>
+                <InputText class="form-control" @bind-Value="@userInfo.LastName" />
+                <ValidationMessage For="@(() => userInfo.LastName)" />
+            </div>
         </div>
-    </div>
 
-    <div class="form-group">
-        <label>Role:</label>
-        <select id="myselect" class="form-control" @onchange="selectedValue">
+        <div class="form-group">
+            <label>Role:</label>
+            <select id="myselect" class="form-control" @onchange="selectedValue">
 
-            <option value="User">User</option>
-            <option value="Administrator">Administrator</option>
+                <option value="User">User</option>
+                <option value="Administrator">Administrator</option>
 
-        </select>
-    </div>
+            </select>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Register</button>
+        <SfSpinner @bind-Visible="@VisibleProperty">
+        </SfSpinner>
 
-</EditForm>
+        <button type="submit" class="btn btn-dark btn-block">Register</button>
+
+    </EditForm>
+
+</div>
 
 @code {
 
@@ -74,23 +81,28 @@
     private EmployeeType employee = new EmployeeType();
     private List<string> rolesList = new List<string>(new string[] { "User" });
 
-    public string SelectedValue = "";
+    private bool VisibleProperty { get; set; } = false;
+
+    public string SelectedRole = "";
     public void selectedValue(ChangeEventArgs args)
     {
-        SelectedValue = args.Value.ToString();
+        SelectedRole = args.Value.ToString();
 
         rolesList.RemoveAt(0);
-        rolesList.Add(SelectedValue);
+        rolesList.Add(SelectedRole);
     }
 
     private async Task CreateUser()
     {
+        VisibleProperty = true;
+
         userInfo.Roles = rolesList;
 
         List<string> userToken = await accountsRepository.Register(userInfo);
 
         if (userToken.ElementAt(0) == "Error: ")
         {
+            VisibleProperty = false;
             await displayMessage.DisplayErrorMessage(string.Join(" ", userToken));
         }
         else
@@ -110,6 +122,7 @@
             {
                 Console.WriteLine("Error create employee " + ex);
             }
+            VisibleProperty = false;
         }
 
     }

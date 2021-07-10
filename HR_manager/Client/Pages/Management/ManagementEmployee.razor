@@ -1,0 +1,165 @@
+﻿@page "/management/employee"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject ILoggedTimeRepository loggedTimeRrepository
+@inject IEmployeeTimeRepository employeeTimeRepository
+@inject IDisplayMessage displayMessage
+@inject NavigationManager navigationManager
+@inject HttpClient _client
+@inject IJSRuntime js
+
+    <div class="col-lg-6 offset-lg-3 ">
+        <EditForm Model="@empTime" OnValidSubmit="CreateUser">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label>Date:</label>
+                <div>
+
+                    <InputDate @bind-Value="@empTime.DateLogged" />
+                    <ValidationMessage For="@(() => empTime.DateLogged)" />
+                </div>
+            </div>
+            <label>Hours:</label>
+            <div class="form-group">
+                <div>
+                    <InputNumber class="form-control" @bind-Value="@empTime.Hours" />
+                    <ValidationMessage For="@(() => empTime.Hours)" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Time type:</label>
+                <select id="myselect" class="form-control" @onchange="selectedValue">
+
+                    <option value=1>Regular</option>
+                    <option value=2>Sick</option>
+                    <option value=3>Vacation</option>
+
+                </select>
+            </div>
+            <button type="submit" class="btn btn-dark btn-block">Submit Logged Time</button>
+
+        </EditForm>
+        </div>
+
+            @if (Logs == null)
+            {
+                <div class="alert alert-info">Loading Logs...</div>
+            }
+            else
+            {
+                <table class="table mt-3">
+                    <thead>
+                        <tr>
+                            <th>Hours</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var log in Logs)
+                        {
+                            <tr>
+                                <td>@log.Hours</td>
+                                <td>@log.DateLogged.ToShortDateString()</td>
+                                <td>
+                                    <a href="" class="btn btn-primary">
+                                        <span class="oi oi-book"></span>
+                                    </a>
+                                    <a href="" class="btn btn-warning">
+                                        <span class="oi oi-pencil"></span>
+                                    </a>
+                                    <button class="btn btn-danger" @onclick="@(()=>Delete(log.Id))">
+                                        <span class="oi oi-delete"></span>
+                                    </button>
+
+
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            }
+
+
+
+            @code {
+                private EmpTimeForm empTime = new EmpTimeForm();
+                private LoggedTimeType loggedTime = new LoggedTimeType();
+                private EmployeeTimeType employeeTime = new EmployeeTimeType();
+
+                string _userId = "";
+                int IdTime;
+                int result;
+
+
+                public int SelectedValue = 1;
+                public void selectedValue(ChangeEventArgs args)
+                {
+                    SelectedValue = Int32.Parse(args.Value.ToString());
+
+
+                }
+
+                private async Task CreateUser()
+                {
+                    loggedTime.Hours = empTime.Hours;
+                    loggedTime.DateLogged = empTime.DateLogged;
+                    loggedTime.FK_LoggedTime_To_LoggedTimeType = SelectedValue;
+
+                    IdTime = await loggedTimeRrepository.CreateTimeLogged(loggedTime);
+
+                    if (IdTime != 0)
+                    {
+                        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                        var user = authState.User;
+                        _userId = user.FindFirst(c => c.Type == "UserId")?.Value;
+
+                        employeeTime.FK_EmployeeTime_to_Employee = _userId;
+                        employeeTime.FK_EmployeeTime_to_LoggedTime = IdTime;
+
+                        result = await employeeTimeRepository.CreateEmployeeTime(employeeTime);
+
+                        if (result == 1)
+                        {
+                            await displayMessage.DisplaySuccessMessage("Time Log created");
+                            Logs = await _client.GetFromJsonAsync<List<LoggedTimeType>>($"{Endpoints.EmployeeTimeEndpoint}/{_userId}");
+                        }
+
+
+                    }
+
+
+                }
+
+                private List<LoggedTimeType> Logs;
+
+                protected async override Task OnInitializedAsync()
+                {
+                    var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                    var user = authState.User;
+                    _userId = user.FindFirst(c => c.Type == "UserId")?.Value;
+
+                    Logs = await _client.GetFromJsonAsync<List<LoggedTimeType>>($"{Endpoints.EmployeeTimeEndpoint}/{_userId}");
+
+                }
+
+                private async Task Delete(int LoggedTimeID)
+                {
+                    var Log = Logs.First(q => q.Id == LoggedTimeID);
+                    var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {Log.DateLogged.ToShortDateString()}?");
+                    if (confirm)
+                    {
+                        await _client.DeleteAsync($"{Endpoints.LoggedTimeEndpoint}/{LoggedTimeID}");
+                        await _client.DeleteAsync($"{Endpoints.EmployeeTimeEndpoint}/{LoggedTimeID}");
+                        Logs = await _client.GetFromJsonAsync<List<LoggedTimeType>>($"{Endpoints.EmployeeTimeEndpoint}/{_userId}");
+
+                    }
+
+
+                }
+
+
+            }
+

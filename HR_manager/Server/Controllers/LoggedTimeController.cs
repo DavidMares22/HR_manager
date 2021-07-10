@@ -30,9 +30,10 @@ namespace HR_manager.Server.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllLoggedTime()
         {
+            List<int> someItems = new List<int> { 34 };
             try
             {
-                var loggedTime = await _unitOfWork.LoggedTime.GetAll();
+                var loggedTime = await _unitOfWork.LoggedTime.GetAll(k=> someItems.Contains(k.Id));
                 var results = _mapper.Map<IList<LoggedTimeDTO>>(loggedTime);
                 return Ok(results);
             }

@@ -3,10 +3,12 @@ using HR_manager.Server.Data;
 using HR_manager.Server.IRepository;
 using HR_manager.Server.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace HR_manager.Server.Controllers
@@ -17,22 +19,33 @@ namespace HR_manager.Server.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApiUser> _userManager;
 
-        public EmployeeTimeController(IUnitOfWork unitOfWork, IMapper mapper)
+        public EmployeeTimeController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<ApiUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
-        [HttpGet]
+        [HttpGet("{currentUserID}", Name = "GetAllEmpTime")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllEmpTime()
+        public async Task<IActionResult> GetAllEmpTime(string currentUserID)
         {
             try
             {
-                var empTime = await _unitOfWork.EmployeeTime.GetAll();
-                var results = _mapper.Map<IList<EmpTimeDTO>>(empTime);
+                List<int> ids = new List<int>();
+                //ClaimsPrincipal currentUser = this.User;
+                //var currentUserID = currentUser.FindFirst("UserId").Value;
+                var empTime = await _unitOfWork.EmployeeTime.GetAll(q => q.FK_EmployeeTime_to_Employee == currentUserID);
+                //var results = _mapper.Map<IList<EmpTimeIDsDTO>>(empTime);
+                foreach (var res in empTime)
+                {
+                    ids.Add(res.FK_EmployeeTime_to_LoggedTime);
+                }
+                var loggedTime = await _unitOfWork.LoggedTime.GetAll(k => ids.Contains(k.Id));
+                var results = _mapper.Map<IList<LoggedTimeDTO>>(loggedTime);
                 return Ok(results);
             }
             catch (Exception ex)

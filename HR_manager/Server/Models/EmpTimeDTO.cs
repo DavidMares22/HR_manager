@@ -8,6 +8,8 @@ namespace HR_manager.Server.Models
 {
     public class EmpTimeDTO
     {
+        public int Id { get; set; }
+
         [Required]
         public string FK_EmployeeTime_to_Employee { get; set; }
 
