@@ -4,11 +4,12 @@
 @inject IEmployeeRepository employeeRepository
 @inject ILoginService loginService
 @inject IDisplayMessage displayMessage
+@inject NavigationManager navigationManager
 
 @using HR_manager.Client.Auth
 
 
-<HeadingComponent  Text="Register"/>
+<HeadingComponent Text="Register" />
 
 <div class="col-lg-6 offset-lg-3 ">
     <EditForm Model="@userInfo" OnValidSubmit="CreateUser">
@@ -117,12 +118,14 @@
 
                 await employeeRepository.CreateEmployee(employee);
                 await displayMessage.DisplaySuccessMessage(string.Join(" ", userToken));
+                VisibleProperty = false;
+                navigationManager.NavigateTo("/login");
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error create employee " + ex);
             }
-            VisibleProperty = false;
+
         }
 
     }

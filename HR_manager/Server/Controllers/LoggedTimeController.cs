@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HR_manager.Server.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace HR_manager.Server.Controllers
 {
@@ -18,6 +20,7 @@ namespace HR_manager.Server.Controllers
 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApiUser> _userManager;
 
         public LoggedTimeController(IUnitOfWork unitOfWork, IMapper mapper)
         {
@@ -28,8 +31,15 @@ namespace HR_manager.Server.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> UpdateLoggedTime(int id, [FromBody] UpdateTimeDTO loggedDTO)
         {
+            var currentUserID = "";
+            ClaimsPrincipal currentUser = this.User;
+             currentUserID = currentUser.FindFirst("UserId").Value;
+
+           
+
             if (!ModelState.IsValid || id < 1)
             {
                 return BadRequest(ModelState);
@@ -42,6 +52,14 @@ namespace HR_manager.Server.Controllers
                 {
                     return BadRequest("Submitted data is invalid");
                 }
+                var empTime = await _unitOfWork.EmployeeTime.Get(q => q.FK_EmployeeTime_to_LoggedTime == id);
+
+                if(empTime.FK_EmployeeTime_to_Employee != currentUserID)
+                {
+                    //Console.WriteLine("not autorized to change");
+                    return StatusCode(401,"You are not authorized to change this log");
+                }
+
 
                 _mapper.Map(loggedDTO, log);
                 _unitOfWork.LoggedTime.Update(log);

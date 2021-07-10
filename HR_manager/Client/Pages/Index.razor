@@ -1,8 +1,21 @@
 ﻿@page "/"
- <p>Index</p>
+
+<HeadingComponent Text="Welcome to HR_manager" />
+<AuthorizeView Roles="Administrator">
+    <h2>Hi, admin @context.User.Identity.Name!</h2>
+</AuthorizeView>
+<AuthorizeView Roles="User">
+    <h2>Hi, user @context.User.Identity.Name!</h2>
+</AuthorizeView>
+<AuthorizeView>
+    <NotAuthorized>
+        <h2>Please, register or login to get started!</h2>
+    </NotAuthorized>
+
+</AuthorizeView>
 
 @code {
-    
+
 
 
 }

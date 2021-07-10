@@ -50,6 +50,7 @@
 @code {
     [Parameter] public int LogId { get; set; }
     public EmpTimeForm empTime;
+    private LoggedTimeType loggedTime = new LoggedTimeType();
     private bool VisibleProperty { get; set; } = true;
 
 
@@ -71,8 +72,16 @@
     {
         VisibleProperty = true;
 
-        var response = await _client.PutAsJsonAsync($"{Endpoints.LoggedTimeEndpoint}/{LogId}", empTime);
+        loggedTime.Hours = empTime.Hours;
+        loggedTime.DateLogged = empTime.DateLogged;
+        loggedTime.FK_LoggedTime_To_LoggedTimeType = SelectedValue;
 
+        var response = await _client.PutAsJsonAsync($"{Endpoints.LoggedTimeEndpoint}/{LogId}", loggedTime);
+
+        if(response.StatusCode.ToString() == "Unauthorized")
+        {
+            await displayMessage.DisplayErrorMessage("You are not authorized to change this log");
+        }
         if (response.StatusCode.ToString() == "OK")
         {
             await displayMessage.DisplaySuccessMessage("Log updated correctly");

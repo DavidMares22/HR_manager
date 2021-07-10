@@ -38,6 +38,9 @@
 
                 </select>
             </div>
+
+            <SfSpinner @bind-Visible="@VisibleProperty">
+            </SfSpinner>
             <button type="submit" class="btn btn-dark btn-block">Submit Logged Time</button>
 
         </EditForm>
@@ -54,6 +57,7 @@
                         <tr>
                             <th>Hours</th>
                             <th>Date</th>
+                            <th>Type</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -63,6 +67,7 @@
                             <tr>
                                 <td>@log.Hours</td>
                                 <td>@log.DateLogged.ToShortDateString()</td>
+                                <td>@Timetype[log.FK_LoggedTime_To_LoggedTimeType]</td>
                                 <td>
                                   
                                     <a href="/management/edit/@log.Id" class="btn btn-warning">
@@ -87,10 +92,11 @@
                 private EmpTimeForm empTime = new EmpTimeForm();
                 private LoggedTimeType loggedTime = new LoggedTimeType();
                 private EmployeeTimeType employeeTime = new EmployeeTimeType();
-
+                private bool VisibleProperty { get; set; } = false;
                 string _userId = "";
                 int IdTime;
                 int result;
+                string[] Timetype = new String[] { "","Regular", "Sick", "Vacation" };
 
 
                 public int SelectedValue = 1;
@@ -103,6 +109,7 @@
 
                 private async Task CreateUser()
                 {
+                    VisibleProperty = true;
                     loggedTime.Hours = empTime.Hours;
                     loggedTime.DateLogged = empTime.DateLogged;
                     loggedTime.FK_LoggedTime_To_LoggedTimeType = SelectedValue;
@@ -126,7 +133,7 @@
                             Logs = await _client.GetFromJsonAsync<List<LoggedTimeType>>($"{Endpoints.EmployeeTimeEndpoint}/{_userId}");
                         }
 
-
+                        VisibleProperty = false;
                     }
 
 
