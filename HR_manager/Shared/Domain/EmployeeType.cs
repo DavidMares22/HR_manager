@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace HR_manager.Shared.Domain
 {
-    public class EmployeeType
-    {
-        public int Id { get; set; }
 
+    public class EmployeeList
+    {
         public string UserId { get; set; }
         [Required]
         public string Name { get; set; }
@@ -18,5 +17,12 @@ namespace HR_manager.Shared.Domain
         public string MiddleName { get; set; }
         [Required]
         public string LastName { get; set; }
+
+    }
+    public class EmployeeType:EmployeeList
+    {
+        public int Id { get; set; }
+
+       
     }
 }

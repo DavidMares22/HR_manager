@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using HR_manager.Server.Models;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HR_manager.Server.Controllers
 {
@@ -22,11 +23,17 @@ namespace HR_manager.Server.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<ApiUser> _userManager;
 
-        public LoggedTimeController(IUnitOfWork unitOfWork, IMapper mapper)
+
+        public LoggedTimeController(IUnitOfWork unitOfWork, IMapper mapper ,UserManager<ApiUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userManager = userManager;
         }
+
+
+
+
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -38,7 +45,7 @@ namespace HR_manager.Server.Controllers
             ClaimsPrincipal currentUser = this.User;
              currentUserID = currentUser.FindFirst("UserId").Value;
 
-           
+            
 
             if (!ModelState.IsValid || id < 1)
             {
@@ -52,13 +59,18 @@ namespace HR_manager.Server.Controllers
                 {
                     return BadRequest("Submitted data is invalid");
                 }
-                var empTime = await _unitOfWork.EmployeeTime.Get(q => q.FK_EmployeeTime_to_LoggedTime == id);
-
-                if(empTime.FK_EmployeeTime_to_Employee != currentUserID)
+                if (User.IsInRole("User"))
                 {
-                    //Console.WriteLine("not autorized to change");
-                    return StatusCode(401,"You are not authorized to change this log");
+
+                    var empTime = await _unitOfWork.EmployeeTime.Get(q => q.FK_EmployeeTime_to_LoggedTime == id);
+
+                    if (empTime.FK_EmployeeTime_to_Employee != currentUserID)
+                    {
+                        //Console.WriteLine("not autorized to change");
+                        return StatusCode(401, "You are not authorized to change this log");
+                    }
                 }
+               
 
 
                 _mapper.Map(loggedDTO, log);

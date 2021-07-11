@@ -1,0 +1,66 @@
+﻿@page "/management/admin"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IDisplayMessage displayMessage
+@inject NavigationManager navigationManager
+@inject HttpClient _client
+@inject IJSRuntime js
+
+<HeadingComponent Text="Employees" />
+
+
+@if (emp == null)
+{
+    <div class="alert alert-info">Loading Employees...</div>
+}
+else
+{
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Last Name</th>
+                <th>Actions</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var e in emp)
+            {
+            <tr>
+                <td>@e.Id</td>
+                <td>@e.Name</td>
+                <td>@e.LastName</td>
+                <td>
+
+                    <a href="/management/employee/@e.UserId" class="btn btn-warning">
+                        <span class="oi oi-pencil"></span>
+                    </a>
+                  
+                </td>
+
+            </tr>
+
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+
+    
+    private List<EmployeeType> emp;
+
+    protected async override Task OnInitializedAsync()
+    {
+        emp = await _client.GetFromJsonAsync<List<EmployeeType>>($"{Endpoints.EmployeesEndpoint}");
+
+    }
+
+
+
+
+}
+

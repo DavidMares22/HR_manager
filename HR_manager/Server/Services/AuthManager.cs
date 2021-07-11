@@ -55,7 +55,8 @@ namespace HR_manager.Server.Services
             var claims = new List<Claim>
              {
                  new Claim(ClaimTypes.Name, _user.UserName),
-                 new Claim(type:"UserId", value:_user.Id)
+                 new Claim(type:"UserId", value:_user.Id),
+                
              };
 
             var roles = await _userManager.GetRolesAsync(_user);

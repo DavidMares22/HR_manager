@@ -1,0 +1,90 @@
+﻿@page "/management/employee/{_userId}"
+@inject HttpClient _client
+@inject IJSRuntime js
+
+@if (Logs == null)
+{
+    <div class="alert alert-info">Loading Logs...</div>
+}
+else
+{
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Hours</th>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Logs)
+            {
+                <tr>
+                    <td>@log.Hours</td>
+                    <td>@log.DateLogged.ToShortDateString()</td>
+                    <td>@Timetype[log.FK_LoggedTime_To_LoggedTimeType]</td>
+                    <td>
+
+                        <a href="/management/admin/edit/log/@log.Id" class="btn btn-warning">
+                            <span class="oi oi-pencil"></span>
+                        </a>
+                        <button class="btn btn-danger" @onclick="@(()=>Delete(log.Id))">
+                            <span class="oi oi-delete"></span>
+                        </button>
+
+
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private EmpTimeForm empTime = new EmpTimeForm();
+    private LoggedTimeType loggedTime = new LoggedTimeType();
+    private EmployeeTimeType employeeTime = new EmployeeTimeType();
+    private bool VisibleProperty { get; set; } = false;
+    [Parameter] public string _userId { get; set; }
+    
+    int IdTime;
+    int result;
+    string[] Timetype = new String[] { "", "Regular", "Sick", "Vacation" };
+
+
+    public int SelectedValue = 1;
+    public void selectedValue(ChangeEventArgs args)
+    {
+        SelectedValue = Int32.Parse(args.Value.ToString());
+
+
+    }
+
+    private List<LoggedTimeType> Logs;
+
+    protected async override Task OnInitializedAsync()
+    {
+
+
+        Logs = await _client.GetFromJsonAsync<List<LoggedTimeType>>($"{Endpoints.EmployeeTimeEndpoint}/{_userId}");
+
+    }
+
+    private async Task Delete(int LoggedTimeID)
+    {
+        var Log = Logs.First(q => q.Id == LoggedTimeID);
+        var confirm = await js.InvokeAsync<bool>("confirm", $"Do you want to delete {Log.DateLogged.ToShortDateString()}?");
+        if (confirm)
+        {
+            await _client.DeleteAsync($"{Endpoints.LoggedTimeEndpoint}/{LoggedTimeID}");
+            await _client.DeleteAsync($"{Endpoints.EmployeeTimeEndpoint}/{LoggedTimeID}");
+            Logs = await _client.GetFromJsonAsync<List<LoggedTimeType>>($"{Endpoints.EmployeeTimeEndpoint}/{_userId}");
+
+        }
+
+
+    }
+
+}

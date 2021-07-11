@@ -1,0 +1,94 @@
+﻿@page "/management/admin/edit/log/{LogId:int}"
+@inject HttpClient _client
+@inject IDisplayMessage displayMessage
+@inject NavigationManager navigationManager
+
+
+<HeadingComponent Text="Edit User logged time" />
+<div class="col-lg-6 offset-lg-3 ">
+
+    @if (empTime != null)
+    {
+        <EditForm Model="@empTime" OnValidSubmit="EditLog">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label>Date:</label>
+                <div>
+
+                    <InputDate @bind-Value="@empTime.DateLogged" />
+                    <ValidationMessage For="@(() => empTime.DateLogged)" />
+                </div>
+            </div>
+            <label>Hours:</label>
+            <div class="form-group">
+                <div>
+                    <InputNumber class="form-control" @bind-Value="@empTime.Hours" />
+                    <ValidationMessage For="@(() => empTime.Hours)" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Time type:</label>
+                <select id="myselect" class="form-control" @onchange="selectedValue">
+
+                    <option value=1>Regular</option>
+                    <option value=2>Sick</option>
+                    <option value=3>Vacation</option>
+
+                </select>
+            </div>
+
+            <SfSpinner @bind-Visible="@VisibleProperty">
+            </SfSpinner>
+            <button type="submit" class="btn btn-dark btn-block">Update Logged Time</button>
+
+        </EditForm>
+    }
+
+</div>
+
+@code {
+    [Parameter] public int LogId { get; set; }
+    public EmpTimeForm empTime;
+    private LoggedTimeType loggedTime = new LoggedTimeType();
+    private bool VisibleProperty { get; set; } = true;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        empTime = await _client.GetFromJsonAsync<EmpTimeForm>($"{Endpoints.LoggedTimeEndpoint}/{LogId}");
+        VisibleProperty = false;
+    }
+
+    public int SelectedValue = 1;
+    public void selectedValue(ChangeEventArgs args)
+    {
+        SelectedValue = Int32.Parse(args.Value.ToString());
+
+
+    }
+
+    private async Task EditLog()
+    {
+        VisibleProperty = true;
+
+        loggedTime.Hours = empTime.Hours;
+        loggedTime.DateLogged = empTime.DateLogged;
+        loggedTime.FK_LoggedTime_To_LoggedTimeType = SelectedValue;
+
+        var response = await _client.PutAsJsonAsync($"{Endpoints.LoggedTimeEndpoint}/{LogId}", loggedTime);
+
+      
+        if (response.StatusCode.ToString() == "OK")
+        {
+            await displayMessage.DisplaySuccessMessage("Log updated correctly");
+        }
+
+        VisibleProperty = false;
+        navigationManager.NavigateTo("/management/admin");
+
+
+    }
+
+}
