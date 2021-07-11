@@ -15,7 +15,7 @@ namespace HR_manager.Shared.DTOs
         [Required]
         public string FirstName { get; set; }
 
-        
+        [Required]
         public string MiddleName { get; set; }
 
         [Required]
